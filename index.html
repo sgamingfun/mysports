@@ -49,7 +49,7 @@ async function load(){
  $("schedule").innerHTML=all.map(x=>{let e=(x.d.events||[]).find(e=>e.status?.type?.state!=="post");return `<div class="row"><div><b>${x.t.name}</b><br><small>${e?gameInfo(e).away.team?.displayName+" @ "+gameInfo(e).home.team?.displayName:"Schedule updating"}</small></div><span>${e?dateLabel(e.date):"—"}</span></div>`}).join("");
  $("status").textContent="Live data loaded";$("updated").textContent="Updated "+new Date().toLocaleTimeString();
 }
-load();setInterval(load,300000);
+setInterval(loadAll, 1 * 60 * 1000);
 </script>
 </body>
 </html>
