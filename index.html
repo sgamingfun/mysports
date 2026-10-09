@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sports HQ</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#07090d;color:#f7f8fb;font:15px Inter,system-ui,sans-serif}body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 80% 0,#18243c,transparent 35%);pointer-events:none}.wrap{max-width:1450px;margin:auto;padding:28px;position:relative}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}.brand{display:flex;gap:12px;align-items:center}.logo{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#fff;color:#080a0e;font-weight:900}.brand b{display:block;font-size:18px}.brand small{color:#778297}.pill{border:1px solid #222936;background:#11151d;padding:9px 13px;border-radius:99px;color:#aab3c2;font-size:12px}.live{display:inline-block;width:7px;height:7px;background:#42d392;border-radius:50%;margin-right:7px;box-shadow:0 0 12px #42d392}.hero{display:grid;grid-template-columns:1.45fr .8fr;gap:16px}.panel{background:rgba(255,255,255,.045);border:1px solid #202631;border-radius:24px;box-shadow:0 20px 60px #0005}.intro{padding:35px;min-height:250px}.eyebrow{text-transform:uppercase;letter-spacing:.16em;color:#8792a5;font-size:11px;font-weight:700}.intro h1{font-size:clamp(42px,6vw,72px);line-height:.92;letter-spacing:-.055em;margin:14px 0}.intro p{color:#8e98a9;max-width:650px}.next{padding:25px}.next h3,.section h2{margin:0}.next h3,.section>span{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#8490a3}.nextitem{margin-top:25px;display:flex;gap:14px;align-items:center}.mini{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-weight:900;background:#16263a}.nextitem small,.sub{color:#8791a2}.when{margin-left:auto;text-align:right}.when b{display:block;color:#fff}.section{display:flex;align-items:end;justify-content:space-between;margin:29px 2px 13px}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}.card{position:relative;overflow:hidden;min-height:295px;padding:19px;border-radius:21px;background:linear-gradient(180deg,#121720,#0d1016);border:1px solid #202631}.card:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--a)}.cardtop{display:flex;justify-content:space-between}.team{width:45px;height:45px;border-radius:14px;display:grid;place-items:center;font-weight:900;background:color-mix(in srgb,var(--a) 18%,#11151d)}.tag{font-size:10px;color:#9ba5b5;border:1px solid #252c37;border-radius:99px;padding:5px 8px}.card h3{margin:18px 0 3px}.sub{font-size:12px}.big{font-size:27px;font-weight:850;margin-top:22px}.label{font-size:11px;color:#707b8d}.nextgame{border-top:1px solid #222833;margin-top:19px;padding-top:14px}.nextgame label{font-size:9px;color:#687487;text-transform:uppercase;letter-spacing:.12em}.game{display:flex;justify-content:space-between;margin-top:8px;font-size:13px}.game em{font-style:normal;color:var(--a)}.bottom{display:grid;grid-template-columns:1fr 1fr;gap:13px}.list{padding:19px}.row{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid #202631}.row:last-child{border:0}.row small{color:#788396}.result{font-weight:800}.muted{color:#788396}.error{color:#ff9ca3;font-size:12px;margin-top:8px}footer{color:#586375;font-size:11px;padding:28px 2px 10px;display:flex;justify-content:space-between}@media(max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}}@media(max-width:600px){.wrap{padding:16px}.grid{grid-template-columns:1fr}.bottom{grid-template-columns:1fr}.pill{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div class="brand"><div class="logo">HQ</div><div><b>Sports HQ</b><small>Live sports dashboard</small></div></div><div class="pill"><i class="live"></i><span id="status">Updating</span></div></header>
+<section class="hero"><div class="panel intro"><div class="eyebrow">Your teams</div><h1>Five teams.<br>One place.</h1><p>Scores, records, schedules and results — refreshed automatically from public sports data.</p></div><div class="panel next"><h3>Next up</h3><div id="next">Loading…</div></div></section>
+<div class="section"><h2>Following</h2><span>Auto-updating</span></div>
+<section class="grid" id="teams"></section>
+<div class="section"><h2>Recent results</h2><span id="updated"></span></div><section class="bottom"><div class="panel list" id="results">Loading live results…</div><div class="panel list" id="schedule">Loading schedule…</div></section>
+<footer><span>SPORTS HQ</span><span>Data refreshes every 5 minutes</span></footer>
+</div>
+<script>
+const teams=[
+ {id:"mariners",name:"Seattle Mariners",league:"MLB · AL West",abbr:"SEA",sport:"baseball",key:"mlb",color:"#159b91",url:"https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard"},
+ {id:"seahawks",name:"Seattle Seahawks",league:"NFL · NFC West",abbr:"SEA",sport:"football",key:"nfl",color:"#69be28",url:"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"},
+ {id:"kraken",name:"Seattle Kraken",league:"NHL · Pacific",abbr:"SEA",sport:"hockey",key:"nhl",color:"#58b9df",url:"https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard"},
+ {id:"byu",name:"BYU Cougars",league:"NCAA Football · Big 12",abbr:"BYU",sport:"football",key:"college-football",color:"#2856d7",url:"https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard"},
+ {id:"ferrari",name:"Scuderia Ferrari HP",league:"Formula 1 · 2026",abbr:"SF",sport:"f1",key:"f1",color:"#e10600",url:null}
+];
+const $=x=>document.querySelector(x);
+function dateLabel(d){return new Date(d).toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});}
+function gameInfo(e){let c=e.competitions?.[0], comps=c?.competitors||[];let home=comps.find(x=>x.homeAway==="home")||{},away=comps.find(x=>x.homeAway==="away")||{};return {c,home,away};}
+async function fetchTeam(t){
+ if(!t.url)return {events:[]};
+ const r=await fetch(t.url); if(!r.ok)throw Error(r.status);
+ return r.json();
+}
+function card(t,data){
+ let ev=(data.events||[])[0], g=ev&&gameInfo(ev), rec="—", next="No upcoming event";
+ if(ev&&g){let status=ev.status?.type?.shortDetail||ev.status?.type?.detail||"Scheduled"; next=(g.away.team?.shortDisplayName||g.away.team?.displayName||"Away")+" @ "+(g.home.team?.shortDisplayName||g.home.team?.displayName||"Home"); if(ev.status?.type?.state==="post"){let me=g.home.team?.abbreviation==="SEA"||g.home.team?.abbreviation==="BYU"?"home":g.away.team?.abbreviation==="SEA"||g.away.team?.abbreviation==="BYU"?"away":null;rec=me?(me==="home"?g.home.score:g.away.score)+"–"+(me==="home"?g.away.score:g.home.score):"Final";} else rec=status;}
+ return `<article class="card" style="--a:${t.color}"><div class="cardtop"><div class="team">${t.abbr}</div><div class="tag">${t.sport==="f1"?"F1":t.key.toUpperCase()}</div></div><h3>${t.name}</h3><div class="sub">${t.league}</div><div class="big">${rec}</div><div class="label">${rec==="—"?"Season data":"Latest / current status"}</div><div class="nextgame"><label>Next event</label><div class="game"><b>${next}</b><em>${ev?dateLabel(ev.date):"Updating"}</em></div></div></article>`;
+}
+async function load(){
+ let all=[];
+ for(const t of teams){try{let d=await fetchTeam(t);all.push({t,d});}catch(e){all.push({t,d:{events:[]},error:e})}}
+ $("teams").innerHTML=all.map(x=>card(x.t,x.d)).join("");
+ let upcoming=all.flatMap(x=>(x.d.events||[]).filter(e=>e.status?.type?.state!=="post").map(e=>({t:x.t,e}))).sort((a,b)=>new Date(a.e.date)-new Date(b.e.date))[0];
+ if(upcoming){let g=gameInfo(upcoming.e);$("next").innerHTML=`<div class="nextitem"><div class="mini" style="background:${upcoming.t.color}22">${upcoming.t.abbr}</div><div><b>${upcoming.t.name}</b><small>${g.away.team?.displayName||"Away"} @ ${g.home.team?.displayName||"Home"}</small></div><div class="when"><b>${dateLabel(upcoming.e.date)}</b><small>${upcoming.e.status?.type?.detail||"Scheduled"}</small></div></div>`}else $("next").innerHTML='<div class="muted" style="margin-top:24px">No upcoming event found.</div>';
+ let finished=all.flatMap(x=>(x.d.events||[]).filter(e=>e.status?.type?.state==="post").slice(-3).map(e=>({t:x.t,e}))).slice(-6).reverse();
+ $("results").innerHTML=finished.length?finished.map(x=>{let g=gameInfo(x.e);return `<div class="row"><div><b>${x.t.name}</b><br><small>${g.away.team?.displayName||"Away"} ${g.away.score||""} — ${g.home.score||""} ${g.home.team?.displayName||"Home"}</small></div><span class="result">FINAL</span></div>`}).join(""):"<div class='muted'>No recent results returned.</div>";
+ $("schedule").innerHTML=all.map(x=>{let e=(x.d.events||[]).find(e=>e.status?.type?.state!=="post");return `<div class="row"><div><b>${x.t.name}</b><br><small>${e?gameInfo(e).away.team?.displayName+" @ "+gameInfo(e).home.team?.displayName:"Schedule updating"}</small></div><span>${e?dateLabel(e.date):"—"}</span></div>`}).join("");
+ $("status").textContent="Live data loaded";$("updated").textContent="Updated "+new Date().toLocaleTimeString();
+}
+load();setInterval(load,300000);
+</script>
+</body>
+</html>
